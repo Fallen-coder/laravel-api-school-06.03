@@ -2,26 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
+use App\Models\Comment;
 use Illuminate\Http\Request;
+use App\Models\Post;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Gate;
 
-class PostController extends Controller implements HasMiddleware
+class CommentController extends Controller implements HasMiddleware
 {
+
     public static function middleware() {
         return [
             new Middleware('auth:sanctum', except: ['index', 'show'])
         ];
     }
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Post::all();
+        $comment = Comment::all();
+        return $comment;
     }
 
     /**
@@ -30,46 +32,44 @@ class PostController extends Controller implements HasMiddleware
     public function store(Request $request)
     {
         $fields = $request->validate([
-            'title' => 'required|max:255',
-            'body' => 'required'
+            'content' => 'required',
+            'post_id' => 'required|exists:posts,id'
         ]);
-        
-        $post = $request->user()->posts()->create($fields);
 
-        return $post;
+        $comment = $request->user()->comments()->create($fields);
+        return $comment;
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(Comment $comment)
     {
-        return $post;
+        return $comment;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Comment $comment)
     {
-        Gate::authorize('modify', $post);
+        Gate::authorize('modify', $comment);
         $fields = $request->validate([
-            'title' => 'required|max:255',
-            'body' => 'required'
+            'content' => 'required'
         ]);
 
-        $post->update($fields);
+        $comment->update($fields);
 
-        return $post;
+        return $comment;
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Comment $comment)
     {
-        Gate::authorize('modify', $post);
-        $post->delete();
-        return ['message' => "The post ($post->id) has been deleted"];
+        Gate::authorize('modify', $comment);
+        $comment->delete();
+        return ['message' => "The post ($comment->id) has been deleted"];
     }
 }

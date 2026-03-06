@@ -3,7 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-
+use App\Policies\CommentPolicy;
+use App\Models\Comment;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -21,4 +22,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+    protected $polices = [
+        Comment::class => CommentPolicy::class,
+    ];
 }
