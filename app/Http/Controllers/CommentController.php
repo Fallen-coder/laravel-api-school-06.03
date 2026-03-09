@@ -20,30 +20,33 @@ class CommentController extends Controller implements HasMiddleware
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Post $post)
     {
-        $comment = Comment::all();
-        return $comment;
+        return $post->comments()->whereNull('flagged_at')->get();
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Post $post)
     {
         $fields = $request->validate([
-            'content' => 'required',
-            'post_id' => 'required|exists:posts,id'
+            'content' => 'required'
         ]);
 
-        $comment = $request->user()->comments()->create($fields);
+
+        $comment = $request->user()->comments()->create([
+            'content' => $fields['content'],
+            'post_id' => $post->id
+        ]);
+
         return $comment;
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Comment $comment)
+    public function show(Comment $comment,Post $post)
     {
         return $comment;
     }
@@ -51,7 +54,7 @@ class CommentController extends Controller implements HasMiddleware
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, Comment $comment,Post $post)
     {
         Gate::authorize('modify', $comment);
         $fields = $request->validate([
@@ -62,24 +65,26 @@ class CommentController extends Controller implements HasMiddleware
 
         return $comment;
     }
-    public function flaged(Request $request, Comment $comment,Post $post)
+    public function flag(Post $post, Comment $comment, Request $request)
     {
-        $post_id = $comment->post_id;
-        $post = Post::findorfail($post_id);
-        Gate::authorize('modify',$post );
+        if($request->user()->id !== $post->user_id){
+            return response()->json([
+                "message"=>"Only post author can flag comments"
+            ],403);
+        }
 
+        $comment->flagged_at = now();
+        $comment->save();
 
-        $comment->update([
-            'flaged' => now()
-        ]);
-
-        return $comment;
+        return [
+            "message"=>"Comment flagged"
+        ];
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(Comment $comment,Post $post)
     {
         Gate::authorize('modify', $comment);
         $comment->delete();

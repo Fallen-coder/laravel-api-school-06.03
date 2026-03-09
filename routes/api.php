@@ -12,12 +12,13 @@ Route::get('/user', function (Request $request) {
 
 Route::apiresource('posts', PostController::class);
 
-Route::apiresource('comments', CommentController::class);
+// Route::apiresource('comments', CommentController::class);
+// Route::post('comments',[ CommentController::class, 'store'])->middleware('auth:sanctum');
 
+Route::apiResource('posts.comments', CommentController::class);
+Route::post('posts/{post}/comments/{comment}/flag',[CommentController::class,'flag'])->middleware('auth:sanctum');
 
-Route::post('comments',[ CommentController::class, 'store'])->middleware('auth:sanctum');
-Route::patch('comments/{comments}/flaged',[ CommentController::class, 'flaged']);
-// Route::apiResource('posts.comments', CommentController::class);
+// Route::post('post/{post}/comments',[ CommentController::class, 'store'])->middleware('auth:sanctum');
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);

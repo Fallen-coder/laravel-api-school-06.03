@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('comments', function (Blueprint $table) {
-            $table->dateTime('flaged_at')->nullable();
+            $table->dateTime('flagged_at')->nullable();
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('comments', function (Blueprint $table) {
-             $table->dropColumn('flaged_at');
+             $table->dropColumn('flagged_at');
         });
     }
 };
