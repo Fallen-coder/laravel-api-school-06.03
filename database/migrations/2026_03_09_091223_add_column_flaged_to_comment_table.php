@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->foreignId('status_id')
-            ->constrained('post_statuses')
-            ->default('draft')
-            ->restrictOnDelete();
+        Schema::table('comments', function (Blueprint $table) {
+            $table->dateTime('flaged_at')->nullable();
         });
     }
 
@@ -24,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->dropColumn('status_id');
+        Schema::table('comments', function (Blueprint $table) {
+             $table->dropColumn('flaged_at');
         });
     }
 };

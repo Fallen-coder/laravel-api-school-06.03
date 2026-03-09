@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('post_statuses', function (Blueprint $table) {
             $table->id();
-            $table->text('status');
-            $table->text('description');
+            $table->string('name')->unique();
+            $table->string('description')->nullable();
         });
     }
 

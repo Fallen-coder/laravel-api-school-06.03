@@ -16,7 +16,7 @@ Route::apiresource('comments', CommentController::class);
 
 
 Route::post('comments',[ CommentController::class, 'store'])->middleware('auth:sanctum');
-
+Route::patch('comments/{comments}/flaged',[ CommentController::class, 'flaged']);
 // Route::apiResource('posts.comments', CommentController::class);
 
 Route::post('/register', [AuthController::class, 'register']);

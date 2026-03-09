@@ -13,12 +13,12 @@ class PostStatusSeeder extends Seeder
     public function run(): void
     {
         PostStatus::insert([
-            ['status' => 'published', 'description' => 'Post is visible to everyone'],
-            ['status' => 'draft', 'description' => 'Post is saved but not published'],
-            ['status' => 'scheduled', 'description' => 'Post is scheduled for future publishing'],
-            ['status' => 'review', 'description' => 'Post is under review'],
-            ['status' => 'archived', 'description' => 'Post is archived and not publicly visible'],
-            ['status' => 'deleted', 'description' => 'Post is deleted'],
+            ['name' => 'published', 'description' => 'Post is visible to everyone'],
+            ['name' => 'draft', 'description' => 'Post is saved but not published'],
+            ['name' => 'scheduled', 'description' => 'Post is scheduled for future publishing'],
+            ['name' => 'review', 'description' => 'Post is under review'],
+            ['name' => 'archived', 'description' => 'Post is archived and not publicly visible'],
+            ['name' => 'deleted', 'description' => 'Post is deleted'],
         ]);
     }
 }

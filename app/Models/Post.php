@@ -11,12 +11,16 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'body'];
+    protected $fillable = [
+        'title',
+        'body',
+        'status_id'
+    ];
 
     public function user() {
         return $this->belongsTo(User::class);
     }
-    public function poststatus() {
+    public function post_statuses() {
         return $this->belongsTo(PostStatus::class);
     }
     public function comments() {

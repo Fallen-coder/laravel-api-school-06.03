@@ -62,6 +62,19 @@ class CommentController extends Controller implements HasMiddleware
 
         return $comment;
     }
+    public function flaged(Request $request, Comment $comment,Post $post)
+    {
+        $post_id = $comment->post_id;
+        $post = Post::findorfail($post_id);
+        Gate::authorize('modify',$post );
+
+
+        $comment->update([
+            'flaged' => now()
+        ]);
+
+        return $comment;
+    }
 
     /**
      * Remove the specified resource from storage.

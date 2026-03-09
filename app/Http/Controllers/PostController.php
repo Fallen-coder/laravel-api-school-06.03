@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\PostStatus;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -33,7 +33,11 @@ class PostController extends Controller implements HasMiddleware
             'title' => 'required|max:255',
             'body' => 'required'
         ]);
-        
+
+        $draft = PostStatus::where('name', 'draft')->first();
+
+        $fields['status_id'] = $draft->id;
+
         $post = $request->user()->posts()->create($fields);
 
         return $post;
@@ -55,7 +59,8 @@ class PostController extends Controller implements HasMiddleware
         Gate::authorize('modify', $post);
         $fields = $request->validate([
             'title' => 'required|max:255',
-            'body' => 'required'
+            'body' => 'required',
+            'status_id' => 'sometimes|exists:post_statuses,id'
         ]);
 
         $post->update($fields);
@@ -69,7 +74,12 @@ class PostController extends Controller implements HasMiddleware
     public function destroy(Post $post)
     {
         Gate::authorize('modify', $post);
-        $post->delete();
+        $post->update([
+            'status_id' => 6
+        ]);
+
+
+
         return ['message' => "The post ($post->id) has been deleted"];
     }
 }
